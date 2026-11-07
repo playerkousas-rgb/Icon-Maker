@@ -1,0 +1,9 @@
+我要開一個新 GitHub repo 做「G11 圖標產生器」公開工具站，唔該跟以下規格開工：
+
+【背景】我哋嘅真理倉係 github.com/playerkousas-rgb/readme，入面 templates/iconmaker/icon_maker_v1.0.html 已經有一份做好、通過靜態審計嘅 Type A 單一 HTML 工具（上載方形母圖 → 瀏覽器本地出齊 9 個圖標檔：16/32/180/192/512/maskable×2/favicon.ico/og-image，連 <head> code 同 manifest 畀人 copy），同埋 templates/iconmaker/README.md 講晒用法同限制。圖標規格以真理倉 docs/33-icon-standard.md 為準，唔好自己改規格。
+
+【要做】① 將 icon_maker_v1.0.html 抄入新 repo 做主頁，保留檔內雙版號（檔名＋內文，readme docs/13 規矩）；② 加 README（用途、點用、限制，內容抄真理倉嗰份改）；③ 加 .gitignore 同真理倉 scripts 入面嘅 guard/audit 檢查（抄得到就抄，抄唔到就照真理倉 templates/README.md 嘅一鍵抄指令）；④ 用 Vercel 部署做公開靜態站，唔使登入就用到；⑤ 交付加 © SCOUT SYSTEM（真理倉 W1 規矩）。
+
+【紅線】唔加 AI（縮圖、出尺寸、砌 ICO 係死運算，唔好 call 任何模型）；唔起後端、唔收用戶上載嘅圖去任何 server（全部喺用戶瀏覽器本地處理，呢個係賣點）；唔加模板以外嘅新功能（唔做 AI 生圖、唔做 ZIP 打包、唔扮自動生成 16px 手繪版）；唔好喺真理倉改模板當交付，改動喺新 repo 做。
+
+【驗收】交付前跑 audit_single_html 要 PASS；跟住做真機驗收（真理倉 docs/33 §9）：favicon 喺瀏覽器分頁認唔認到、iPhone 加去主畫面圖標啱唔啱、Android maskable 圓裁有冇切走個樣、WhatsApp 分享預覽出唔出到 og-image、多檔逐個下載順唔順——測完將結果寫入新 repo README，未測到嘅明寫未測，唔好扮測咗。
