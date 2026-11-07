@@ -3,12 +3,6 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "regions": ["hkg1"],
-  "rewrites": [
-    {
-      "source": "/",
-      "destination": "/icon_maker_v1.0.html"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",

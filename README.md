@@ -2,7 +2,7 @@
 
 公開、免登入的 Type A 單一 HTML 工具。上載一張母圖後，工具會在瀏覽器本地產生符合 G11 規格的 9 個圖標檔，並提供可複製的 `<head>` 程式碼及 `manifest.webmanifest`。
 
-**Vercel 預覽：** <https://icon-maker-git-arena-8dc4b1db-2602bf-playerkousas-rgbs-projects.vercel.app>
+**正式網址：** <https://icon-maker-tau.vercel.app/>
 
 > **私隱承諾：**圖片只在你的瀏覽器內以 File API／Canvas 處理，**不會上載到任何伺服器**。本工具沒有後端、沒有 API、沒有分析追蹤，亦不會呼叫任何 AI 模型。
 
@@ -46,9 +46,9 @@
 
 ## 私隱及技術規定
 
-- Type A 單一 HTML：`icon_maker_v1.0.html`。
+- Type A 版本化主檔：`icon_maker_v1.0.html`；Vercel 根頁 `index.html` 是由主檔自動產生的部署拷貝，禁止直接修改。
 - 零外部套件、零 CDN、零後端；下載及圖片處理全在本機完成。
-- 雙版號 v1.0：檔名、`<meta name="app-version">`、標題、`APP_VERSION` 常數及頁尾一致。
+- 雙版號 v1.0：主檔檔名、`<meta name="app-version">`、標題、`APP_VERSION` 常數及頁尾一致；部署拷貝帶有來源及版號標記。
 - 版權：`© SCOUT SYSTEM`；可自由使用／改作，但須保留版權標示。
 - 模板來源：真理倉 `playerkousas-rgb/readme` 的 `arena/676e77bf-readme` 分支，commit `614f33d53b7fae58a529d503860ad3212e7373f1`。本 repo 的交付 HTML 與該模板 SHA-256 相同：`d54ce318050b79ffc3a754da479d3f7498894f7a58c713eb24aaa49506c46bf1`。
 
@@ -57,11 +57,13 @@
 需要 Node.js 20 或以上；不需安裝 dependency。
 
 ```bash
+node scripts/sync_index_v1.0.mjs --check
 node scripts/audit_single_html_v1.0.mjs icon_maker_v1.0.html
+node scripts/audit_single_html_v1.0.mjs index.html
 node scripts/guard.mjs
 ```
 
-GitHub Actions 亦會在每次 push／pull request 執行相同 guard 及單一 HTML 審計。
+如有修改版本化主檔，先執行 `node scripts/sync_index_v1.0.mjs` 更新部署拷貝。GitHub Actions 會在每次 push／pull request 驗證兩者同步，並執行相同 guard 及單一 HTML 審計。
 
 ## 驗收結果（2026-11-07）
 
@@ -69,8 +71,9 @@ GitHub Actions 亦會在每次 push／pull request 執行相同 guard 及單一 
 |---|---|---|
 | `audit_single_html_v1.0.mjs` 靜態審計 | ✅ PASS | 0 FAIL；2 個預期警告：Type A 無 AI key slot（C13）、固定尺寸圖標不嵌水印（W2） |
 | `guard.mjs` | ✅ PASS | 16 項檢查全綠 |
-| Vercel preview deployment | ✅ READY | Vercel GitHub check 通過；branch 預覽網址見頁首 |
-| Vercel 根路徑及免登入存取 | **未測** | 部署已 Ready，但目前執行環境未能對 `vercel.app` 作外部匿名請求；請以無痕視窗確認 |
+| `index.html` 部署拷貝同步 | ✅ PASS | CI 會以 `sync_index_v1.0.mjs --check` 防止主檔與首頁 drift |
+| Vercel production 根路徑 | 🔧 已修正，待部署 | 2026-11-07 實測曾回 `404 NOT_FOUND`；現改為實體 `index.html`，不再依賴根路徑 rewrite |
+| Vercel 免登入存取 | **未測** | 新 deployment Ready 後須以無痕視窗確認 |
 | favicon 在瀏覽器分頁顯示 | **未測** | 需要以產出的圖標放入目標 app 後真機驗收 |
 | iPhone「加入主畫面」圖標及無白邊 | **未測** | 沒有 iPhone 真機可用，沒有假裝測過 |
 | Android maskable 圓裁不切走主體 | **未測** | 需要 Android 真機及實際母圖 |
@@ -81,11 +84,11 @@ GitHub Actions 亦會在每次 push／pull request 執行相同 guard 及單一 
 
 ## Vercel 部署
 
-- `vercel.json` 將根路徑 `/` rewrite 到版本化交付檔 `icon_maker_v1.0.html`，不另存一份可能 drift 的 `index.html`。
+- Vercel 直接以根目錄的 `index.html` 提供 `/`；該檔由 `icon_maker_v1.0.html` 產生，CI 會阻止不同步的部署拷貝。
+- 已移除曾令 production 根路徑回傳 `404 NOT_FOUND` 的 rewrite，避免 `cleanUrls` 與帶副檔名目的地互相影響。
 - 純靜態站，無登入、無 serverless function、無環境變數。
 - `.vercelignore` 排除 Git、文件及檢查腳本，只部署公開工具所需檔案。
 - 部署地區設定為香港 `hkg1`。
-- 目前 branch preview 已部署並顯示 READY；PR 合併到 `main` 後，由 Vercel GitHub integration 產生 production deployment／正式 alias。
 
 ---
 
