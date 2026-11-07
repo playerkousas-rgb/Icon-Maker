@@ -2,6 +2,8 @@
 
 公開、免登入的 Type A 單一 HTML 工具。上載一張母圖後，工具會在瀏覽器本地產生符合 G11 規格的 9 個圖標檔，並提供可複製的 `<head>` 程式碼及 `manifest.webmanifest`。
 
+**Vercel 預覽：** <https://icon-maker-git-arena-8dc4b1db-2602bf-playerkousas-rgbs-projects.vercel.app>
+
 > **私隱承諾：**圖片只在你的瀏覽器內以 File API／Canvas 處理，**不會上載到任何伺服器**。本工具沒有後端、沒有 API、沒有分析追蹤，亦不會呼叫任何 AI 模型。
 
 ## 用途
@@ -67,7 +69,8 @@ GitHub Actions 亦會在每次 push／pull request 執行相同 guard 及單一 
 |---|---|---|
 | `audit_single_html_v1.0.mjs` 靜態審計 | ✅ PASS | 0 FAIL；2 個預期警告：Type A 無 AI key slot（C13）、固定尺寸圖標不嵌水印（W2） |
 | `guard.mjs` | ✅ PASS | 16 項檢查全綠 |
-| Vercel 根路徑及免登入存取 | 待部署 | `vercel.json` 已設定 `/` 指向版本化 HTML |
+| Vercel preview deployment | ✅ READY | Vercel GitHub check 通過；branch 預覽網址見頁首 |
+| Vercel 根路徑及免登入存取 | **未測** | 部署已 Ready，但目前執行環境未能對 `vercel.app` 作外部匿名請求；請以無痕視窗確認 |
 | favicon 在瀏覽器分頁顯示 | **未測** | 需要以產出的圖標放入目標 app 後真機驗收 |
 | iPhone「加入主畫面」圖標及無白邊 | **未測** | 沒有 iPhone 真機可用，沒有假裝測過 |
 | Android maskable 圓裁不切走主體 | **未測** | 需要 Android 真機及實際母圖 |
@@ -82,6 +85,7 @@ GitHub Actions 亦會在每次 push／pull request 執行相同 guard 及單一 
 - 純靜態站，無登入、無 serverless function、無環境變數。
 - `.vercelignore` 排除 Git、文件及檢查腳本，只部署公開工具所需檔案。
 - 部署地區設定為香港 `hkg1`。
+- 目前 branch preview 已部署並顯示 READY；PR 合併到 `main` 後，由 Vercel GitHub integration 產生 production deployment／正式 alias。
 
 ---
 
