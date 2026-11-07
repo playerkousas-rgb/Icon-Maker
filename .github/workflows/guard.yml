@@ -22,8 +22,12 @@ jobs:
           node-version: '20'
       - name: Guard (docs / secrets / size / links)
         run: node scripts/guard.mjs
+      - name: Check Vercel homepage deployment copy
+        run: node scripts/sync_index_v1.0.mjs --check
       - name: Audit versioned single HTML
-        run: node scripts/audit_single_html_v1.0.mjs icon_maker_v1.0.html
+        run: |
+          node scripts/audit_single_html_v1.0.mjs icon_maker_v1.0.html
+          node scripts/audit_single_html_v1.0.mjs index.html
       - name: Brain guard tests (F14)
         if: hashFiles('**/*.test.mjs') != ''
         run: node --test
